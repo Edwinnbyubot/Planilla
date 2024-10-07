@@ -1,99 +1,112 @@
-import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Empleados from '@/Components/EmpleadoList';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { useForm } from '@inertiajs/react';
 
-const index = () => {
-    return (
+const Index = ({ empleado }) => {
+
+  console.log(empleado);
+
+  const initialValues={
+    Tipo: '',
+    fechaInicio: '',
+    fechaFin: '',
+    Comentario: '',
+    idEmpleado: '',
+  }
+
+  const {data,errors,setData,post}=useForm(initialValues)
+
+  const handleEmpleadoSelect = (empleadoId) => {
+    setData('idEmpleado', empleadoId); // Actualizar el ID del empleado seleccionado
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    post(route('ausencias.store')); // Cambié la ruta para adaptarla a la que usas en la base de datos
+  };
+
+  return (
     <AuthenticatedLayout>
+      <Head title="Gestión de Ausencias y Vacaciones" />
+      <div className="container mx-auto p-6">
+        <h1 className="text-3xl font-bold text-center mb-6">Registrar Ausencia o Vacación</h1>
+        <form onSubmit={submit} className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="flex flex-col">
+            <label className="font-semibold">Tipo</label>
+            <select
+              value={data.Tipo}
+              onChange={(e) => setData('Tipo', e.target.value)}
+              className="border rounded p-2 mt-1"
+              name="Tipo"
+            >
+              <option value="">Selecciona un Tipo</option>
+              <option value="Ausencia">Ausencia</option>
+              <option value="Vacaciones">Vacaciones</option>
+            </select>
+          </div>
 
-<Head title="Gestión de Ausencias y Vacaciones" />
-<div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 min-h-screen">
-  <div className="container mx-auto p-6">
-    <h1 className="text-3xl font-bold text-center mb-6 text-black dark:text-white">Gestión de Ausencias o Vacaciones</h1>
+          <div className="flex flex-col">
+            <label className="font-semibold">Fecha de Inicio</label>
+            <input
+              type="date"
+              className="border rounded p-2 mt-1"
+              value={data.fechaInicio}
+              onChange={(e) => setData('fechaInicio', e.target.value)}
+              name="fechaInicio"
+            />
+          </div>
 
-    {/* Formulario para registrar ausencias o vacaciones */}
-    <div className="bg-white shadow-md rounded-lg p-6 mb-10">
-      <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Registrar Ausencia o Vacación</h2>
-      <form action="{{ route('ausencias_vacaciones.store') }}" method="POST" className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        
-        <div className="flex flex-col">
-          <label className="font-semibold text-black dark:text-white">Tipo</label>
-          <select className="border rounded p-2 mt-1" name="Tipo">
-            <option value="Ausencia">Ausencia</option>
-            <option value="Vacaciones">Vacaciones</option>
-          </select>
-        </div>
+          <div className="flex flex-col">
+            <label className="font-semibold">Fecha de Fin</label>
+            <input
+              type="date"
+              className="border rounded p-2 mt-1"
+              value={data.fechaFin}
+              onChange={(e) => setData('fechaFin', e.target.value)}
+              name="fechaFin"
+            />
+          </div>
 
-        <div className="flex flex-col">
-          <label className="font-semibold text-black dark:text-white">Fecha de Inicio</label>
-          <input type="date" className="border rounded p-2 mt-1" name="fechaInicio" />
-        </div>
+          <div className="flex flex-col col-span-2">
+            <label className="font-semibold">Comentario</label>
+            <textarea
+              className="border rounded p-2 mt-1"
+              value={data.Comentario}
+              onChange={(e) => setData('Comentario', e.target.value)}
+              name="Comentario"
+            />
+          </div>
 
-        <div className="flex flex-col">
-          <label className="font-semibold text-black dark:text-white">Fecha de Fin</label>
-          <input type="date" className="border rounded p-2 mt-1" name="fechaFin" />
-        </div>
+          <div className="flex flex-col col-span-2">
+          <label className="font-semibold">Empleado</label>
+            <select
+              value={data.idEmpleado}
+              onChange={(e) => setData('idEmpleado', e.target.value)}
+              className="border rounded p-2 mt-1"
+              name="idEmpleado"
+            >
+              <option value="">Selecciona un Tipo</option>
+              {empleado.map((emple) => (
+                <option key={emple.id} value={emple.id}>
+                  {`${emple.Nombre} ${emple.Apellido}`}
+              </option>
+        ))}
+            </select>
+          </div>
 
-        <div className="flex flex-col col-span-2">
-          <label className="font-semibold text-black dark:text-white">Comentario</label>
-          <textarea className="border rounded p-2 mt-1" name="Comentario" placeholder="Comentario sobre la ausencia o vacación (opcional)"></textarea>
-        </div>
-
-        <div className="flex flex-col">
-          <label className="font-semibold text-black dark:text-white">Empleado</label>
-          <select className="border rounded p-2 mt-1" name="idEmpleado">
-            {/* Aquí agregarás opciones dinámicamente basadas en los empleados disponibles */}
-            <option value="">Selecciona un empleado</option>
-          </select>
-        </div>
-
-        <div className="col-span-2">
-          <button type="submit" className="bg-green-700 text-white px-4 py-2 rounded transition hover:bg-green-800 w-full mt-4">
-            Registrar
-          </button>
-        </div>
-      </form>
-    </div>
-
-    {/* Tabla para listar tanto ausencias como vacaciones */}
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Historial de Ausencias y Vacaciones</h2>
-      <table className="min-w-full table-auto">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2">Tipo</th>
-            <th className="px-4 py-2">Fecha de Inicio</th>
-            <th className="px-4 py-2">Fecha de Fin</th>
-            <th className="px-4 py-2">Comentario</th>
-            <th className="px-4 py-2">Empleado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Aquí iterarás los datos de ausencias y vacaciones */}
-          <tr className="border-t">
-            <td className="px-4 py-2">Ausencia</td>
-            <td className="px-4 py-2">2024-09-01</td>
-            <td className="px-4 py-2">2024-09-03</td>
-            <td className="px-4 py-2">Enfermedad</td>
-            <td className="px-4 py-2">Juan Pérez</td>
-          </tr>
-          <tr className="border-t">
-            <td className="px-4 py-2">Vacaciones</td>
-            <td className="px-4 py-2">2024-12-20</td>
-            <td className="px-4 py-2">2025-01-02</td>
-            <td className="px-4 py-2">Vacaciones anuales</td>
-            <td className="px-4 py-2">María López</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-
+          <div className="col-span-2">
+            <button
+              type="submit"
+              className="bg-green-700 text-white px-4 py-2 rounded transition hover:bg-green-800 w-full"
+            >
+              Registrar
+            </button>
+          </div>
+        </form>
+      </div>
     </AuthenticatedLayout>
-    )
-}
+  );
+};
 
-export default index
+export default Index;

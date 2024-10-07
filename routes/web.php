@@ -27,8 +27,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); 
 });
 
 Route::prefix('dashboard')->group(function(){
@@ -38,7 +37,4 @@ Route::prefix('dashboard')->group(function(){
     Route::resource('bonificaciones',ControllerBonificacione::class);
     Route::resource('devoluciones',ControllerDevolucione::class);
 });
-
-Route::post('/empleado/store', [ControllerEmpleado::class, 'store'])->name('empleado.store');
-
 require __DIR__.'/auth.php';

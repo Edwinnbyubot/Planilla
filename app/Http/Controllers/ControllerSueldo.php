@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sueldo;
-use App\Http\Requests\StoreSueldoRequest;
+use App\Models\Empleado;
+use Illuminate\Http\Request;
 use App\Http\Requests\UpdateSueldoRequest;
 use Inertia\Inertia;
 class ControllerSueldo extends Controller
@@ -13,8 +14,9 @@ class ControllerSueldo extends Controller
      */
     public function index()
     {
+        $empleado = Empleado::all();
         $sueldo = Sueldo::all();
-        return Inertia::render('sueldos/index');
+        return Inertia::render('sueldos/index',compact(('empleado')));
     }
 
     /**
@@ -28,26 +30,19 @@ class ControllerSueldo extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSueldoRequest $request)
+    public function store(Request $request)
     {
         $request->validate([
             'fechaPago' => 'required|date',
-            'SalarioBruto'=> 'required|decimal',
-            'Deducciones'=> 'required|string|decimal',
-            'Bonificaciones'=> 'required|decimal',
-            'Impuestos'=> 'required|decimal',
-            'SalarioNeto'=> 'required|decimal',
+            'SalarioBruto'=> 'required|numeric|between:0,99999999.99',
+            'Deducciones'=> 'required|numeric|between:0,99999999.99',
+            'Bonificaciones'=> 'required|numeric|between:0,99999999.99',
+            'Impuestos'=> 'required|numeric|between:0,99999999.99',
+            'SalarioNeto'=> 'required|numeric|between:0,99999999.99',
             'idEmpleado'=> 'required|integer',
             ]);
-        Sueldo::create($request->only(
-            'fechaPago' ,
-            'SalarioBruto',
-            'Deducciones',
-            'Bonificaciones',
-            'Impuestos',
-            'SalarioNeto',
-            'idEmpleado'));
-        return redirect()->route('sueldos.index')->with('success', 'Sueldo Registrado');
+            $data=$request->only('fechaPago','SalarioBruto','Deducciones','Bonificaciones','Impuestos','SalarioNeto','idEmpleado');
+            Sueldo::create($data);
     }
 
     /**

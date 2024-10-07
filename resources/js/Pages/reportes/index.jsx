@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Empleados from '@/Components/EmpleadoList';
+import Empleados from '@/Components/EmpleadoSelector';
 import { Head, Link } from '@inertiajs/react';
 
 const index = () => {

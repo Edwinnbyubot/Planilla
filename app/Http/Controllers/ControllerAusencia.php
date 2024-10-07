@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Empleado;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use App\Models\Ausencia;
-use App\Http\Requests\StoreAusenciaRequest;
 use App\Http\Requests\UpdateAusenciaRequest;
 
 class ControllerAusencia extends Controller
@@ -13,8 +14,9 @@ class ControllerAusencia extends Controller
      */
     public function index()
     {
+        $empleado = Empleado::all();
         $ausencia = Ausencia::all();
-        return Inertia::render('ausencias/index');
+        return Inertia::render('ausencias/index',compact(('empleado')));
     }
 
     /**
@@ -28,20 +30,17 @@ class ControllerAusencia extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAusenciaRequest $request)
+    public function store(Request $request)
     {
         $request->validate([
+            'Tipo' => 'required|string|max:255',
             'fechaInicio' => 'required|date',
             'fechaFin'=> 'required|date',
             'Comentario'=> 'required|string|max:255',
             'idEmpleado'=> 'required|integer',
             ]);
-        Ausencia::create($request->only(
-            'fechaInicio',
-            'fechaFin',
-            'Comentario',
-            'idEmpleado'));
-        return redirect()->route('ausencias.index')->with('success', 'Aunsecia Registrado');
+        $data=$request->only('Tipo','fechaInicio','fechaFin','Comentario','idEmpleado');
+        Ausencia::create($data);
     }
 
     /**
@@ -63,7 +62,7 @@ class ControllerAusencia extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAusenciaRequest $request, Ausencia $ausencia)
+    public function update(Request $request, Ausencia $ausencia)
     {
         $request->validate([
             'fechaInicio' => 'required|date',

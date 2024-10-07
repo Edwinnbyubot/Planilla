@@ -13,7 +13,7 @@ class ControllerEmpleado extends Controller
     {
         // Obtiene todos los empleados
         $empleado = Empleado::all();
-        return Inertia::render('empleados/index');
+        return Inertia::render('empleados/index',compact(('empleado')));
     }
 
 
@@ -54,7 +54,7 @@ class ControllerEmpleado extends Controller
     public function edit(Empleado $empleado)
     {
         // Muestra el formulario para editar el empleado seleccionado
-        return view('empleados.edit', compact('empleado'));
+        return Inertia::render('empleados/edit',compact('empleado'));
     }
 
 
@@ -69,12 +69,10 @@ class ControllerEmpleado extends Controller
             'Salario' => 'required|numeric|between:0,99999999.99',
             'Estado' => 'required|string|in:Activo,Inactivo',
         ]);
-
-        // Actualiza los datos del empleado
-        $empleado->update($request->all());
-
-        // Redirige al índice con un mensaje de éxito
-        return redirect()->route('empleados.index')->with('success', 'Empleado actualizado exitosamente.');
+        $data=$request->only('Nombre','Apellido','FechaContrato','Cargo','Salario','Estado');
+        // Crea un nuevo empleado
+        $empleado->update($data);
+        return to_route('empleados.index',$empleado);
     }
 
 
@@ -84,6 +82,6 @@ class ControllerEmpleado extends Controller
         $empleado->delete();
 
         // Redirige al índice con un mensaje de éxito
-        return redirect()->route('empleados.index')->with('success', 'Empleado eliminado exitosamente.');
+        return to_route('empleados.index',$empleado);
     }
 }

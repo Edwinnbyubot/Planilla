@@ -1,5 +1,5 @@
 import React from 'react';
-import Empleados from '@/Components/EmpleadoList';
+import Empleados from '@/Components/EmpleadoSelector';
 import { Head, Link } from '@inertiajs/react';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {

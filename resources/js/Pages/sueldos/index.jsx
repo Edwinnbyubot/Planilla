@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Empleados from '@/Components/EmpleadoList';
-import { Head, Link } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+const index = ({empleado}) => {
+  console.log(empleado);
 
-const index = () => {
+  const initialValues={
+    fechaPago: "",
+    SalarioBruto: "",
+    Deducciones: "",
+    Bonificaciones: "",
+    Impuestos: "",
+    SalarioNeto: "",
+    idEmpleado: "",
+  }
+
+  const {data,errors,setData,post}=useForm(initialValues)
+
+  const handleEmpleadoSelect = (empleadoId) => {
+    setData('idEmpleado', empleadoId); // Actualizar el ID del empleado seleccionado
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    post(route('sueldos.store')); // Cambié la ruta para adaptarla a la que usas en la base de datos
+  };
+
     return (
     <AuthenticatedLayout>
 
@@ -15,44 +37,90 @@ const index = () => {
     {/* Formulario para registrar nuevo sueldo */}
     <div className="bg-white shadow-md rounded-lg p-6 mb-10">
       <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Registrar Nuevo Sueldo</h2>
-      <form action="{{ route('sueldos.store') }}" method="POST" className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <form onSubmit={submit} className="grid grid-cols-1 gap-6 md:grid-cols-2">
         
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Fecha de Pago</label>
-          <input type="date" className="border rounded p-2 mt-1" name="fechaPago" />
+          <input 
+            type="date"
+            className="border rounded p-2 mt-1"
+            id='fechaPago'
+            value={data.fechaPago}
+            onChange={(e) => setData('fechaPago', e.target.value)}
+            name="fechaPago" />
         </div>
         
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Salario Bruto</label>
-          <input type="number" step="0.01" className="border rounded p-2 mt-1" name="SalarioBruto" placeholder="Salario Bruto" />
+          <input type="number" 
+            className="border rounded p-2 mt-1"
+            id='SalarioBruto'
+            value={data.SalarioBruto}
+            onChange={(e) => setData('SalarioBruto', e.target.value)}
+            name="SalarioBruto"
+          />
         </div>
         
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Deducciones</label>
-          <input type="number" step="0.01" className="border rounded p-2 mt-1" name="Deducciones" placeholder="Total Deducciones" />
+          <input type="number" 
+            className="border rounded p-2 mt-1"
+            id='Deducciones'
+            value={data.Deducciones}
+            onChange={(e) => setData('Deducciones', e.target.value)}
+            name="Deducciones"
+            />
         </div>
         
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Bonificaciones</label>
-          <input type="number" step="0.01" className="border rounded p-2 mt-1" name="Bonificaciones" placeholder="Total Bonificaciones" />
+          <input type="number" 
+            className="border rounded p-2 mt-1"
+            id='Bonificaciones'
+            value={data.Bonificaciones}
+            onChange={(e) => setData('Bonificaciones', e.target.value)}
+            name="Bonificaciones"
+          />
         </div>
         
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Impuestos</label>
-          <input type="number" step="0.01" className="border rounded p-2 mt-1" name="Impuestos" placeholder="Total Impuestos" />
+          <input type="number"
+            className="border rounded p-2 mt-1"
+            id='Impuestos'
+            value={data.Impuestos}
+            onChange={(e) => setData('Impuestos', e.target.value)}
+            name="Impuestos"
+          />
         </div>
         
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Salario Neto</label>
-          <input type="number" step="0.01" className="border rounded p-2 mt-1" name="SalarioNeto" placeholder="Salario Neto" />
+          <input type="number" 
+            className="border rounded p-2 mt-1"
+            id='SalarioNeto'
+            value={data.SalarioNeto}
+            onChange={(e) => setData('SalarioNeto', e.target.value)}
+            name="SalarioNeto"
+          />
         </div>
 
         <div className="flex flex-col">
-          <label className="font-semibold text-black dark:text-white">Empleado</label>
-          <select className="border rounded p-2 mt-1" name="idEmpleado">
-            {/* Aquí agregarás opciones dinámicamente basadas en los empleados disponibles */}
-            <option value="">Selecciona un empleado</option>
-          </select>
+        <label className="font-semibold">Empleado</label>
+            <select
+              id='idEmpleado'
+              value={data.idEmpleado}
+              onChange={(e) => setData('idEmpleado', e.target.value)}
+              className="border rounded p-2 mt-1"
+              name="idEmpleado"
+            >
+              <option value="">Selecciona un Empleado</option>
+              {empleado.map((emple) => (
+                <option key={emple.id} value={emple.id}>
+                  {`${emple.Nombre} ${emple.Apellido}`}
+              </option>
+        ))}
+            </select>
         </div>
 
         <div className="col-span-2">
