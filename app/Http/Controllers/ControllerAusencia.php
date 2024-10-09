@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\Ausencia;
 use App\Http\Requests\UpdateAusenciaRequest;
+use App\Models\Sueldo;
 
 class ControllerAusencia extends Controller
 {
@@ -81,5 +82,12 @@ class ControllerAusencia extends Controller
     {
         $ausencia->delete();
         return redirect()->route('ausencias.index')->with('success', 'Aunsecia Eliminido Correctamente');
+    }
+    public function report()
+    {
+        $empleado = Empleado::all();
+        $sueldo = Sueldo::all();
+        $ausencia = Ausencia::all();
+        return Inertia::render('reportes/index',compact('empleado','sueldo','ausencia'));
     }
 }

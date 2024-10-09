@@ -50,8 +50,8 @@ export default function Authenticated({ header, children }) {
                                 </NavLink>
                                 
                                 <NavLink
-                                    href={route('empleados.index')}
-                                    active={route().current('empleados.index')}
+                                    href={route('reportes.index')}
+                                    active={route().current('ausencias.index')}
                                 >
                                     Reportes
                                 </NavLink>

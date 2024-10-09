@@ -36,5 +36,7 @@ Route::prefix('dashboard')->group(function(){
     Route::resource('ausencias',ControllerAusencia::class);
     Route::resource('bonificaciones',ControllerBonificacione::class);
     Route::resource('devoluciones',ControllerDevolucione::class);
+    Route::get('/reportes', [ControllerAusencia::class, 'report'])->name('reportes.index');
 });
+
 require __DIR__.'/auth.php';
