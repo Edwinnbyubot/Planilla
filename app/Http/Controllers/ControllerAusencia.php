@@ -15,9 +15,9 @@ class ControllerAusencia extends Controller
      */
     public function index()
     {
-        $empleado = Empleado::all();
-        $ausencia = Ausencia::all();
-        return Inertia::render('ausencias/index',compact(('empleado')));
+        $empleados = Empleado::all();
+        $ausencias = Ausencia::all();
+        return Inertia::render('ausencias/index',compact('empleados','ausencias'));
     }
 
     /**

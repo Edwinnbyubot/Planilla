@@ -98,6 +98,7 @@ const index = ({empleado}) => {
               id='Estado'
               value={data.Estado}
               onChange={(e)=>setData("Estado",e.target.value)}>
+              <option value="">Selecciona un Tipo</option>
               <option value="Activo">Activo</option>
               <option value="Inactivo">Inactivo</option>
             </select>

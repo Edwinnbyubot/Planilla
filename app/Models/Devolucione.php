@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Devolucione extends Model
 {
     use HasFactory;
-    protected $fillable=['TipoDevoluccion','Monto','fecha','idEmpleado','idSueldo'];
+    protected $fillable=['tipo','razon','monto','fecha','idEmpleado','idSueldo'];
 }

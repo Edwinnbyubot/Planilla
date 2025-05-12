@@ -3,9 +3,9 @@ import { Head } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 
-const Index = ({ empleado }) => {
-
-  console.log(empleado);
+const Index = ({ empleados,ausencias }) => {
+  console.log(ausencias);
+  console.log(empleados);
 
   const initialValues={
     Tipo: '',
@@ -29,9 +29,28 @@ const Index = ({ empleado }) => {
   return (
     <AuthenticatedLayout>
       <Head title="Gestión de Ausencias y Vacaciones" />
+      <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 min-h-screen">
       <div className="container mx-auto p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 mb-10 text-black">
         <h1 className="text-3xl font-bold text-center mb-6">Registrar Ausencia o Vacación</h1>
         <form onSubmit={submit} className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="flex flex-col col-span-2">
+          <label className="font-semibold">Empleado</label>
+            <select
+              value={data.idEmpleado}
+              onChange={(e) => setData('idEmpleado', e.target.value)}
+              className="border rounded p-2 mt-1"
+              name="idEmpleado"
+            >
+              <option value="">Selecciona un Empleado</option>
+              {empleados.map((emple) => (
+                <option key={emple.id} value={emple.id}>
+                  {`${emple.Nombre} ${emple.Apellido}`}
+              </option>
+        ))}
+            </select>
+          </div>
+          
           <div className="flex flex-col">
             <label className="font-semibold">Tipo</label>
             <select
@@ -78,22 +97,7 @@ const Index = ({ empleado }) => {
             />
           </div>
 
-          <div className="flex flex-col col-span-2">
-          <label className="font-semibold">Empleado</label>
-            <select
-              value={data.idEmpleado}
-              onChange={(e) => setData('idEmpleado', e.target.value)}
-              className="border rounded p-2 mt-1"
-              name="idEmpleado"
-            >
-              <option value="">Selecciona un Tipo</option>
-              {empleado.map((emple) => (
-                <option key={emple.id} value={emple.id}>
-                  {`${emple.Nombre} ${emple.Apellido}`}
-              </option>
-        ))}
-            </select>
-          </div>
+          
 
           <div className="col-span-2">
             <button
@@ -104,6 +108,39 @@ const Index = ({ empleado }) => {
             </button>
           </div>
         </form>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 mb-10 text-black">
+        <h2 className="text-2xl font-bold mb-4">Lista de Vacaciones o Ausencias</h2>
+            <table className="min-w-full table-auto">
+            <thead>
+            <tr className="bg-gray-200 text-left">
+                <th className="p-2">Tipo</th>
+                <th className="p-2">Fecha de Inicio</th>
+                <th className="p-2">Fecha de Fin</th>
+                <th className="p-2">Comentarios</th>
+                <th className="p-2">Empleado</th>
+            </tr>
+            </thead>
+            
+            <tbody>
+            {ausencias?.map((ausencia) => {
+            // Encontrar el empleado correspondiente por su idEmpleado
+            const empleado = empleados.find(emp => emp.id === ausencia.idEmpleado);
+        
+            return (
+                <tr className="border-t" key={ausencia.id}>
+                <td className="px-4 py-2">{ausencia.Tipo}</td>
+                <td className="px-4 py-2">{ausencia.fechaInicio}</td>
+                <td className="px-4 py-2">{ausencia.fechaFin}</td>
+                <td className="px-4 py-2">{ausencia.Comentario}</td>
+                <td className="px-4 py-2">{empleado ? `${empleado.Nombre} ${empleado.Apellido}` : 'Empleado no encontrado'}</td>
+            </tr>
+        );
+        })}
+            </tbody>
+        </table>
+        </div>
+      </div>
       </div>
     </AuthenticatedLayout>
   );

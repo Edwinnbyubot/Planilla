@@ -20,7 +20,8 @@ const index = ({empleado}) => {
   const handleEmpleadoSelect = (empleadoId) => {
     setData('idEmpleado', empleadoId); // Actualizar el ID del empleado seleccionado
   };
-
+  
+  
   const submit = (e) => {
     e.preventDefault();
     post(route('sueldos.store')); // Cambié la ruta para adaptarla a la que usas en la base de datos
@@ -39,6 +40,23 @@ const index = ({empleado}) => {
       <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Registrar Nuevo Sueldo</h2>
       <form onSubmit={submit} className="grid grid-cols-1 gap-6 md:grid-cols-2">
         
+      <div className="flex flex-col col-span-2">
+          <label className="font-semibold text-black" >Empleado</label>
+            <select
+              value={data.idEmpleado}
+              onChange={(e) => setData('idEmpleado', e.target.value)}
+              className="border rounded p-2 mt-1"
+              name="idEmpleado"
+            >
+              <option value="">Selecciona un Empleado</option>
+              {empleado.map((emple) => (
+                <option key={emple.id} value={emple.id}>
+                  {`${emple.Nombre} ${emple.Apellido}`}
+                  </option>
+        ))}
+            </select>
+          </div>
+
         <div className="flex flex-col">
           <label className="font-semibold text-black dark:text-white">Fecha de Pago</label>
           <input 
@@ -58,7 +76,7 @@ const index = ({empleado}) => {
             value={data.SalarioBruto}
             onChange={(e) => setData('SalarioBruto', e.target.value)}
             name="SalarioBruto"
-          />
+          ></input>
         </div>
         
         <div className="flex flex-col">
@@ -105,23 +123,7 @@ const index = ({empleado}) => {
           />
         </div>
 
-        <div className="flex flex-col">
-        <label className="font-semibold">Empleado</label>
-            <select
-              id='idEmpleado'
-              value={data.idEmpleado}
-              onChange={(e) => setData('idEmpleado', e.target.value)}
-              className="border rounded p-2 mt-1"
-              name="idEmpleado"
-            >
-              <option value="">Selecciona un Empleado</option>
-              {empleado.map((emple) => (
-                <option key={emple.id} value={emple.id}>
-                  {`${emple.Nombre} ${emple.Apellido}`}
-              </option>
-        ))}
-            </select>
-        </div>
+        
 
         <div className="col-span-2">
           <button type="submit" className="bg-green-700 text-white px-4 py-2 rounded transition hover:bg-green-800 w-full mt-4">
@@ -136,7 +138,7 @@ const index = ({empleado}) => {
       <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Deducciones</h2>
       <table className="min-w-full table-auto">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className="bg-gray-200 text-left text-black">
             <th className="px-4 py-2">Tipo de Deducción</th>
             <th className="px-4 py-2">Monto</th>
             <th className="px-4 py-2">Fecha</th>
@@ -145,7 +147,7 @@ const index = ({empleado}) => {
         </thead>
         <tbody>
           {/* Aquí iterarás los datos de deducciones */}
-          <tr className="border-t">
+          <tr className="border-t text-black">
             <td className="px-4 py-2">ISR</td>
             <td className="px-4 py-2">500.00</td>
             <td className="px-4 py-2">2024-10-01</td>
@@ -155,29 +157,6 @@ const index = ({empleado}) => {
       </table>
     </div>
 
-    {/* Tabla de bonificaciones */}
-    <div className="bg-white shadow-md rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Bonificaciones</h2>
-      <table className="min-w-full table-auto">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2">Tipo de Bonificación</th>
-            <th className="px-4 py-2">Monto</th>
-            <th className="px-4 py-2">Fecha</th>
-            <th className="px-4 py-2">Empleado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Aquí iterarás los datos de bonificaciones */}
-          <tr className="border-t">
-            <td className="px-4 py-2">Bono de Productividad</td>
-            <td className="px-4 py-2">300.00</td>
-            <td className="px-4 py-2">2024-10-01</td>
-            <td className="px-4 py-2">Juan Pérez</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>
 
