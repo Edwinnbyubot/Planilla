@@ -194,6 +194,7 @@ const index = ({ empleados, sueldos, devoluciones }) => {
                 <th className="px-4 p-2">Sueldo</th>
             </tr>
             </thead>
+
             
             <tbody>
             {devoluciones
