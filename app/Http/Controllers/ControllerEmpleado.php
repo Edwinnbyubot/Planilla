@@ -38,7 +38,7 @@ class ControllerEmpleado extends Controller
         $data=$request->only('Nombre','Apellido','FechaContrato','Cargo','Salario','Estado');
         // Crea un nuevo empleado
         Empleado::create($data);
-        
+        return to_route('empleados.index');
         //Redirige al índice con un mensaje de éxito
         //return redirect()->route('empleados')->with('success', 'Empleado creado exitosamente.');
     }

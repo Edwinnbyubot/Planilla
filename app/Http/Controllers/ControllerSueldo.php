@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sueldo;
+use App\Models\Devolucione;
 use App\Models\Empleado;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateSueldoRequest;
@@ -78,7 +79,39 @@ class ControllerSueldo extends Controller
         $sueldo->update($request->only('fechaInicio','fechaFin','Comentario','idEmpleado'));
         return redirect()->route('sueldos.index')->with('success', 'Sueldo Acutalizado');
     }
+    public function actualizarSueldo(Request $request, $idSueldo)
+{
+    // Obtener el sueldo a actualizar
+    $sueldo = Sueldo::findOrFail($idSueldo);
 
+    // Obtener las devoluciones relacionadas con el empleado y sueldo
+    $devoluciones = Devolucione::where('idSueldo', $idSueldo)->get();
+
+    // Inicializar variables para sumar bonificaciones y deducciones
+    $totalBonificaciones = 0;
+    $totalDeducciones = 0;
+
+    // Recorrer las devoluciones para calcular los totales de bonificaciones y deducciones
+    foreach ($devoluciones as $devolucion) {
+        if ($devolucion->tipo === 'Bonificación') {
+            $totalBonificaciones += $devolucion->monto;
+        } elseif ($devolucion->tipo === 'Deducción') {
+            $totalDeducciones += $devolucion->monto;
+        }
+    }
+
+    // Calcular el nuevo sueldo neto
+    $nuevoSueldoNeto = $sueldo->SalarioBruto + $totalBonificaciones - $totalDeducciones;
+
+    // Actualizar los campos del sueldo en la base de datos
+    $sueldo->update([
+        'Bonificaciones' => $totalBonificaciones,
+        'Deducciones' => $totalDeducciones,
+        'SalarioNeto' => $nuevoSueldoNeto
+    ]);
+
+    return response()->json(['message' => 'Sueldo actualizado correctamente']);
+}
     /**
      * Remove the specified resource from storage.
      */
@@ -87,4 +120,5 @@ class ControllerSueldo extends Controller
         $sueldo->delete();
         return redirect()->route('ausencias.index')->with('success', 'Sueldo Eliminido Correctamente');
     }
+    
 }
