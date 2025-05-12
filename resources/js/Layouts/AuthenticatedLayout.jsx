@@ -48,7 +48,12 @@ export default function Authenticated({ header, children }) {
                                 >
                                     Vacaciones o Ausencias
                                 </NavLink>
-                                
+                                <NavLink
+                                    href={route('devoluciones.index')}
+                                    active={route().current('devoluciones.index')}
+                                >
+                                    Devoluciones
+                                </NavLink>
                                 <NavLink
                                     href={route('reportes.index')}
                                     active={route().current('ausencias.index')}
